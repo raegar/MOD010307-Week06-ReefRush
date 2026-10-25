@@ -43,7 +43,7 @@ namespace ReefRush
         {
             for (int i = 0; i < startCount; i++)
             {
-                SpawnFish();
+                SpawnFish(RandomPointOnReef(), Random.Range(1f, 2.5f));
             }
             ShowCount();
         }
@@ -73,8 +73,20 @@ namespace ReefRush
         {
             for (int i = 0; i < swarmSize; i++)
             {
-                SpawnFish();
+                SpawnFish(RandomPointOnReef(), Random.Range(1f, 2.5f));
             }
+            ShowCount();
+        }
+
+        /// <summary>Spawn one fish just off the side of the reef, so it swims in from outside. Used by the waves.</summary>
+        public void SpawnAtEdge(float swimSpeed)
+        {
+            float y = Random.Range(Reef.yMin, Reef.yMax);
+            Fish fish = SpawnFish(new Vector2(0f, y), swimSpeed * Random.Range(0.8f, 1.2f));
+
+            // It picked its own direction in Setup, so put it on the side it is swimming away from.
+            float x = fish.SwimmingRight ? Reef.xMin - 0.9f : Reef.xMax + 0.9f;
+            fish.transform.position = new Vector2(x, y);
             ShowCount();
         }
 
@@ -122,14 +134,17 @@ namespace ReefRush
             return null;
         }
 
-        private void SpawnFish()
+        private Fish SpawnFish(Vector2 position, float swimSpeed)
         {
-            Vector2 position = new Vector2(Random.Range(Reef.xMin, Reef.xMax), Random.Range(Reef.yMin, Reef.yMax));
             Fish fish = Instantiate(fishPrefab, position, Quaternion.identity, transform);
-
-            fish.Setup(RandomFishInfo(), Random.Range(1f, 2.5f));
-
+            fish.Setup(RandomFishInfo(), swimSpeed);
             allFish.Add(fish);
+            return fish;
+        }
+
+        private static Vector2 RandomPointOnReef()
+        {
+            return new Vector2(Random.Range(Reef.xMin, Reef.xMax), Random.Range(Reef.yMin, Reef.yMax));
         }
 
         private void ShowCount()

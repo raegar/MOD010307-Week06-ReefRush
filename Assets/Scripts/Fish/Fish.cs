@@ -18,6 +18,7 @@ namespace ReefRush
         public FishInfo Info { get; private set; }
         public FishType Type => Info.type;
         public int Points => Info.points;
+        public bool SwimmingRight => direction > 0f;
 
         /// <summary>True once the fish is a whole body-length past the edge it was swimming towards.</summary>
         public bool IsOffReef
