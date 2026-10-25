@@ -26,6 +26,9 @@ namespace ReefRush
         [Tooltip("How many fish the Swarm button adds.")]
         [SerializeField, Min(1)] private int swarmSize = 500;
 
+        [Tooltip("On: the spawner moves every fish in one loop. Off: each fish gets a SelfSwimmer with its own Update (for comparing in the Profiler).")]
+        [SerializeField] private bool useManagerLoop = true;
+
         [Tooltip("How close (in world units) a tap must be to a fish to catch it.")]
         [SerializeField, Min(0.1f)] private float catchRadius = 0.6f;
 
@@ -61,7 +64,7 @@ namespace ReefRush
             for (int i = allFish.Count - 1; i >= 0; i--)
             {
                 Fish fish = allFish[i];
-                fish.Swim(deltaTime);
+                if (useManagerLoop) fish.Swim(deltaTime);
                 if (fish.IsOffReef)
                 {
                     allFish.RemoveAt(i);      // forget it first...
@@ -153,6 +156,7 @@ namespace ReefRush
         {
             Fish fish = Instantiate(fishPrefab, position, Quaternion.identity, transform);
             fish.Setup(RandomFishInfo(), swimSpeed);
+            if (!useManagerLoop) fish.gameObject.AddComponent<SelfSwimmer>();
             allFish.Add(fish);
             return fish;
         }
