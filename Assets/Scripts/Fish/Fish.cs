@@ -4,6 +4,7 @@ namespace ReefRush
 {
     /// <summary>
     /// One fish: it swims left or right across the reef and turns round at the edges.
+    /// It has no Update of its own: the FishSpawner moves every fish in one loop by calling Swim.
     /// </summary>
     public sealed class Fish : MonoBehaviour
     {
@@ -27,9 +28,10 @@ namespace ReefRush
             sprite.flipX = direction < 0f;   // the sprites face right, so flip the ones swimming left
         }
 
-        private void Update()
+        /// <summary>Move for one frame. deltaTime is passed in by whoever is moving the fish.</summary>
+        public void Swim(float deltaTime)
         {
-            transform.position += Vector3.right * (direction * speed * Time.deltaTime);
+            transform.position += Vector3.right * (direction * speed * deltaTime);
 
             // Turn round at the edges of the reef.
             float x = transform.position.x;
