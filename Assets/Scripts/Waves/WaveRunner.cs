@@ -28,7 +28,20 @@ namespace ReefRush
         private void Start()
         {
             bannerText.enabled = false;
+        }
+
+        /// <summary>Start the first wave. Called by the GameManager.</summary>
+        public void Begin()
+        {
+            StopAllCoroutines();
             StartCoroutine(RunWaves());
+        }
+
+        /// <summary>Stop sending fish, for example when the game is over.</summary>
+        public void Stop()
+        {
+            StopAllCoroutines();
+            bannerText.enabled = false;
         }
 
         // A coroutine: a method that can pause (yield) and carry on from the same place in a later frame.
@@ -57,8 +70,6 @@ namespace ReefRush
                 }
             }
 
-            bannerText.text = "Reef cleared!";
-            bannerText.enabled = true;
             AllWavesCleared?.Invoke();
         }
     }

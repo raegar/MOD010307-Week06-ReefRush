@@ -29,6 +29,13 @@ namespace ReefRush
             ShowScore();
         }
 
+        /// <summary>Back to 0 for a new game.</summary>
+        public void ResetScore()
+        {
+            Score = 0;
+            ShowScore();
+        }
+
         private void OnFishCaught(Fish fish)
         {
             Score += fish.Points + targetCard.Tick(fish.Type);

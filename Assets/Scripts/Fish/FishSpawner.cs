@@ -39,6 +39,9 @@ namespace ReefRush
         /// <summary>Raised whenever the player catches a fish. The ScoreKeeper listens for it.</summary>
         public event Action<Fish> FishCaught;
 
+        /// <summary>Raised whenever a fish swims off the reef. The GameManager counts them.</summary>
+        public event Action<Fish> FishEscaped;
+
         private void Start()
         {
             for (int i = 0; i < startCount; i++)
@@ -62,6 +65,7 @@ namespace ReefRush
                 if (fish.IsOffReef)
                 {
                     allFish.RemoveAt(i);      // forget it first...
+                    FishEscaped?.Invoke(fish);
                     Destroy(fish.gameObject); // ...then remove it from the scene
                 }
             }
@@ -75,6 +79,17 @@ namespace ReefRush
             {
                 SpawnFish(RandomPointOnReef(), Random.Range(1f, 2.5f));
             }
+            ShowCount();
+        }
+
+        /// <summary>Remove every fish from the reef, ready for a new game.</summary>
+        public void Clear()
+        {
+            foreach (Fish fish in allFish)
+            {
+                Destroy(fish.gameObject);
+            }
+            allFish.Clear();
             ShowCount();
         }
 
