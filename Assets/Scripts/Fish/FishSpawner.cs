@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace ReefRush
 {
@@ -15,8 +17,8 @@ namespace ReefRush
 
         [SerializeField] private Fish fishPrefab;
 
-        [Tooltip("The looks a fish can have. Each new fish picks one at random.")]
-        [SerializeField] private Sprite[] fishSprites;
+        [Tooltip("Every kind of fish: its type, sprite and points. Each new fish picks one at random.")]
+        [SerializeField] private FishInfo[] catalogue;
 
         [Tooltip("How many fish to spawn when the game starts.")]
         [SerializeField, Min(0)] private int startCount = 10;
@@ -33,6 +35,9 @@ namespace ReefRush
         private readonly List<Fish> allFish = new List<Fish>();
 
         public int Count => allFish.Count;
+
+        /// <summary>Raised whenever the player catches a fish. The ScoreKeeper listens for it.</summary>
+        public event Action<Fish> FishCaught;
 
         private void Start()
         {
@@ -95,8 +100,26 @@ namespace ReefRush
         {
             // Remove returns false if the fish wasn't in the list (already caught), so it can't be caught twice.
             if (!allFish.Remove(fish)) return;
+            FishCaught?.Invoke(fish);
             Destroy(fish.gameObject);
             ShowCount();
+        }
+
+        /// <summary>One kind of fish from the catalogue, picked at random.</summary>
+        public FishInfo RandomFishInfo()
+        {
+            // Random.Range with two ints never returns the second number, so this is always a valid index.
+            return catalogue[Random.Range(0, catalogue.Length)];
+        }
+
+        /// <summary>The catalogue entry for a type: look at each entry in turn until one matches.</summary>
+        public FishInfo InfoFor(FishType type)
+        {
+            foreach (FishInfo info in catalogue)
+            {
+                if (info.type == type) return info;
+            }
+            return null;
         }
 
         private void SpawnFish()
@@ -104,9 +127,7 @@ namespace ReefRush
             Vector2 position = new Vector2(Random.Range(Reef.xMin, Reef.xMax), Random.Range(Reef.yMin, Reef.yMax));
             Fish fish = Instantiate(fishPrefab, position, Quaternion.identity, transform);
 
-            // Random.Range with two ints never returns the second number, so this is always a valid index.
-            int index = Random.Range(0, fishSprites.Length);
-            fish.Setup(fishSprites[index], Random.Range(1f, 2.5f));
+            fish.Setup(RandomFishInfo(), Random.Range(1f, 2.5f));
 
             allFish.Add(fish);
         }

@@ -14,6 +14,11 @@ namespace ReefRush
         private SpriteRenderer sprite;
         private float direction = 1f;   // 1 = swimming right, -1 = swimming left
 
+        /// <summary>What kind of fish this is (set by the spawner).</summary>
+        public FishInfo Info { get; private set; }
+        public FishType Type => Info.type;
+        public int Points => Info.points;
+
         /// <summary>True once the fish is a whole body-length past the edge it was swimming towards.</summary>
         public bool IsOffReef
         {
@@ -30,9 +35,10 @@ namespace ReefRush
         }
 
         /// <summary>Called by the spawner straight after it creates the fish.</summary>
-        public void Setup(Sprite look, float swimSpeed)
+        public void Setup(FishInfo info, float swimSpeed)
         {
-            sprite.sprite = look;
+            Info = info;
+            sprite.sprite = info.sprite;
             speed = swimSpeed;
             direction = Random.value < 0.5f ? -1f : 1f;
             sprite.flipX = direction < 0f;   // the sprites face right, so flip the ones swimming left
