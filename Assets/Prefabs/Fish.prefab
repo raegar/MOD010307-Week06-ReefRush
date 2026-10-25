@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6358761586451024822}
   - component: {fileID: 2180402566362705078}
+  - component: {fileID: 4321541986978667948}
   m_Layer: 0
   m_Name: Fish
   m_TagString: Untagged
@@ -91,3 +92,16 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &4321541986978667948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417283470428147396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe851c7a028bb58439b6a7c6ff57791e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReefRush.Fish
+  speed: 1.5
