@@ -5,7 +5,8 @@ using UnityEngine.UI;
 namespace ReefRush
 {
     /// <summary>
-    /// Spawns fish, keeps a List of every fish on the reef, and moves them all in one loop.
+    /// Spawns fish, keeps a List of every fish on the reef, moves them all in one loop,
+    /// and removes them again when they are caught or swim away.
     /// </summary>
     public sealed class FishSpawner : MonoBehaviour
     {
@@ -22,6 +23,9 @@ namespace ReefRush
 
         [Tooltip("How many fish the Swarm button adds.")]
         [SerializeField, Min(1)] private int swarmSize = 500;
+
+        [Tooltip("How close (in world units) a tap must be to a fish to catch it.")]
+        [SerializeField, Min(0.1f)] private float catchRadius = 0.6f;
 
         [SerializeField] private Text countText;
 
@@ -42,11 +46,21 @@ namespace ReefRush
         private void Update()
         {
             // One loop moves every fish, however many there are.
+            // It runs BACKWARDS, from the last fish to the first, so that removing a fish
+            // can't make the loop skip the one after it.
             float deltaTime = Time.deltaTime;
-            for (int i = 0; i < allFish.Count; i++)
+            int countBefore = allFish.Count;
+            for (int i = allFish.Count - 1; i >= 0; i--)
             {
-                allFish[i].Swim(deltaTime);
+                Fish fish = allFish[i];
+                fish.Swim(deltaTime);
+                if (fish.IsOffReef)
+                {
+                    allFish.RemoveAt(i);      // forget it first...
+                    Destroy(fish.gameObject); // ...then remove it from the scene
+                }
             }
+            if (allFish.Count != countBefore) ShowCount();
         }
 
         /// <summary>Called by the Swarm button.</summary>
@@ -56,6 +70,32 @@ namespace ReefRush
             {
                 SpawnFish();
             }
+            ShowCount();
+        }
+
+        /// <summary>The fish nearest to a point, or null if none is within catchRadius.</summary>
+        public Fish FishAt(Vector2 point)
+        {
+            Fish nearest = null;
+            float nearestDistance = catchRadius;
+            foreach (Fish fish in allFish)
+            {
+                float distance = Vector2.Distance(fish.transform.position, point);
+                if (distance < nearestDistance)
+                {
+                    nearest = fish;
+                    nearestDistance = distance;
+                }
+            }
+            return nearest;
+        }
+
+        /// <summary>Take a fish off the reef because the player caught it.</summary>
+        public void Catch(Fish fish)
+        {
+            // Remove returns false if the fish wasn't in the list (already caught), so it can't be caught twice.
+            if (!allFish.Remove(fish)) return;
+            Destroy(fish.gameObject);
             ShowCount();
         }
 

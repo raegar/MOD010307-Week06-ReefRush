@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ReefRush
 {
     /// <summary>
-    /// One fish: it swims left or right across the reef and turns round at the edges.
+    /// One fish: it swims left or right across the reef until it swims off the other side.
     /// It has no Update of its own: the FishSpawner moves every fish in one loop by calling Swim.
     /// </summary>
     public sealed class Fish : MonoBehaviour
@@ -13,6 +13,16 @@ namespace ReefRush
 
         private SpriteRenderer sprite;
         private float direction = 1f;   // 1 = swimming right, -1 = swimming left
+
+        /// <summary>True once the fish is a whole body-length past the edge it was swimming towards.</summary>
+        public bool IsOffReef
+        {
+            get
+            {
+                float x = transform.position.x;
+                return direction > 0f ? x > FishSpawner.Reef.xMax + 1f : x < FishSpawner.Reef.xMin - 1f;
+            }
+        }
 
         private void Awake()
         {
@@ -32,16 +42,6 @@ namespace ReefRush
         public void Swim(float deltaTime)
         {
             transform.position += Vector3.right * (direction * speed * deltaTime);
-
-            // Turn round at the edges of the reef.
-            float x = transform.position.x;
-            bool pastRightEdge = x > FishSpawner.Reef.xMax && direction > 0f;
-            bool pastLeftEdge = x < FishSpawner.Reef.xMin && direction < 0f;
-            if (pastRightEdge || pastLeftEdge)
-            {
-                direction = -direction;
-                sprite.flipX = direction < 0f;
-            }
         }
     }
 }

@@ -410,7 +410,7 @@ MonoBehaviour:
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 56
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -643,6 +643,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 738247935}
   m_CullTransparentMesh: 1
+--- !u!1 &749674994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 749674996}
+  - component: {fileID: 749674995}
+  m_Layer: 0
+  m_Name: TapCatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &749674995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749674994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 811720e04d308f74ca78b0547a467ccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReefRush.TapCatcher
+  spawner: {fileID: 830553064}
+--- !u!4 &749674996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 749674994}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &762962302
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,6 +939,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2f3638b8691a34c4780a78123cb77c97, type: 3}
   startCount: 10
   swarmSize: 500
+  catchRadius: 0.6
   countText: {fileID: 1075625711}
 --- !u!4 &830553065
 Transform:
@@ -1046,7 +1092,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 48
     m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1937,3 +1983,4 @@ SceneRoots:
   - {fileID: 830553065}
   - {fileID: 1169056771}
   - {fileID: 789085985}
+  - {fileID: 749674996}
